@@ -1,0 +1,19 @@
+repository: Nyayuta1060/Horloq-Plugins
+plugins:
+  - name: hello
+    path: hello
+    description: シンプルなHello Worldプラグイン
+    version: 1.0.0
+    author: Nyayuta1060
+  
+  - name: timer
+    path: timer
+    description: カウントダウンタイマー（プリセット機能付き）
+    version: 1.0.0
+    author: Nyayuta1060
+  
+  - name: stopwatch
+    path: stopwatch
+    description: 精密時間計測（ラップタイム機能付き）
+    version: 1.0.0
+    author: Nyayuta1060
