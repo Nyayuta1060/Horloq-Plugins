@@ -57,6 +57,11 @@ class WeatherPlugin(PluginBase):
         """初期化"""
         return True
     
+    def shutdown(self):
+        """プラグインを終了"""
+        if self.weather_window and self.weather_window.winfo_exists():
+            self.weather_window.destroy()
+    
     def create_widget(self, parent):
         """ウィジェットを作成"""
         frame = ctk.CTkFrame(parent)

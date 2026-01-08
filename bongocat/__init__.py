@@ -38,6 +38,12 @@ class BongoCatPlugin(PluginBase):
         """初期化"""
         return True
     
+    def shutdown(self):
+        """プラグインを終了"""
+        self._stop_monitoring()
+        if self.bongocat_window and self.bongocat_window.winfo_exists():
+            self.bongocat_window.destroy()
+    
     def create_widget(self, parent):
         """ウィジェットを作成"""
         frame = ctk.CTkFrame(parent)

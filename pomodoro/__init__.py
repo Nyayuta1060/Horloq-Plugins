@@ -33,6 +33,13 @@ class PomodoroPlugin(PluginBase):
         """初期化"""
         return True
     
+    def shutdown(self):
+        """プラグインを終了"""
+        if self.after_id and self.pomodoro_window:
+            self.pomodoro_window.after_cancel(self.after_id)
+        if self.pomodoro_window and self.pomodoro_window.winfo_exists():
+            self.pomodoro_window.destroy()
+    
     def create_widget(self, parent):
         """ウィジェットを作成"""
         frame = ctk.CTkFrame(parent)

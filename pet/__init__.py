@@ -78,6 +78,13 @@ class DesktopPetPlugin(PluginBase):
         """初期化"""
         return True
     
+    def shutdown(self):
+        """プラグインを終了"""
+        if self.after_id and self.pet_window:
+            self.pet_window.after_cancel(self.after_id)
+        if self.pet_window and self.pet_window.winfo_exists():
+            self.pet_window.destroy()
+    
     def create_widget(self, parent):
         """ウィジェットを作成"""
         frame = ctk.CTkFrame(parent)
