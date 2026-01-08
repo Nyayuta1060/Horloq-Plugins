@@ -84,6 +84,7 @@ class WeatherPlugin(PluginBase):
         self.weather_window = ctk.CTkToplevel()
         self.weather_window.title("天気予報")
         self.weather_window.geometry("500x650")
+        self.weather_window.attributes("-topmost", True)  # 最前面固定
         
         # メインフレーム
         main_frame = ctk.CTkFrame(self.weather_window)

@@ -62,6 +62,7 @@ class PomodoroPlugin(PluginBase):
         self.pomodoro_window = ctk.CTkToplevel()
         self.pomodoro_window.title("ポモドーロタイマー")
         self.pomodoro_window.geometry("450x600")
+        self.pomodoro_window.attributes("-topmost", True)  # 最前面固定
         
         # メインフレーム
         main_frame = ctk.CTkFrame(self.pomodoro_window)

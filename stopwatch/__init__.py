@@ -51,6 +51,7 @@ class StopwatchPlugin(PluginBase):
         self.stopwatch_window = ctk.CTkToplevel()
         self.stopwatch_window.title("ストップウォッチ")
         self.stopwatch_window.geometry("350x500")
+        self.stopwatch_window.attributes("-topmost", True)  # 最前面固定
         
         # 時間表示
         self.time_label = ctk.CTkLabel(

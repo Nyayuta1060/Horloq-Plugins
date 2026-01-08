@@ -139,6 +139,11 @@ class BongoCatPlugin(PluginBase):
         
         # ウィンドウクローズ時のハンドラ
         self.bongocat_window.protocol("WM_DELETE_WINDOW", self._on_window_close)
+        
+        # 自動的に監視を開始
+        self._start_monitoring()
+        self.toggle_btn.configure(text="監視停止")
+        self.status_label.configure(text="監視中...")
     
     def _draw_cat_idle(self):
         """待機中の猫を描画"""

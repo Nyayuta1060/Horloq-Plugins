@@ -49,6 +49,7 @@ class TimerPlugin(PluginBase):
         self.timer_window = ctk.CTkToplevel()
         self.timer_window.title("タイマー")
         self.timer_window.geometry("300x400")
+        self.timer_window.attributes("-topmost", True)  # 最前面固定
         
         # タイマー表示
         self.time_label = ctk.CTkLabel(
