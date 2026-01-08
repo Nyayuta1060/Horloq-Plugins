@@ -48,7 +48,7 @@ class TimerPlugin(PluginBase):
         
         self.timer_window = ctk.CTkToplevel()
         self.timer_window.title("タイマー")
-        self.timer_window.geometry("300x400")
+        self.timer_window.geometry("350x500")
         self.timer_window.attributes("-topmost", True)  # 最前面固定
         
         # タイマー表示
@@ -78,6 +78,71 @@ class TimerPlugin(PluginBase):
                 width=60,
             )
             btn.pack(side="left", padx=5)
+        
+        # 自由入力セクション
+        input_label = ctk.CTkLabel(
+            self.timer_window,
+            text="または自由入力:",
+            font=("Arial", 12),
+        )
+        input_label.pack(pady=(10, 5))
+        
+        input_frame = ctk.CTkFrame(self.timer_window)
+        input_frame.pack(pady=5)
+        
+        # 時間入力
+        ctk.CTkLabel(
+            input_frame,
+            text="時:",
+            font=("Arial", 12),
+        ).pack(side="left", padx=5)
+        
+        self.hours_entry = ctk.CTkEntry(
+            input_frame,
+            width=50,
+            font=("Arial", 14),
+        )
+        self.hours_entry.insert(0, "0")
+        self.hours_entry.pack(side="left", padx=2)
+        
+        # 分入力
+        ctk.CTkLabel(
+            input_frame,
+            text="分:",
+            font=("Arial", 12),
+        ).pack(side="left", padx=5)
+        
+        self.minutes_entry = ctk.CTkEntry(
+            input_frame,
+            width=50,
+            font=("Arial", 14),
+        )
+        self.minutes_entry.insert(0, "0")
+        self.minutes_entry.pack(side="left", padx=2)
+        
+        # 秒入力
+        ctk.CTkLabel(
+            input_frame,
+            text="秒:",
+            font=("Arial", 12),
+        ).pack(side="left", padx=5)
+        
+        self.seconds_entry = ctk.CTkEntry(
+            input_frame,
+            width=50,
+            font=("Arial", 14),
+        )
+        self.seconds_entry.insert(0, "0")
+        self.seconds_entry.pack(side="left", padx=2)
+        
+        # 設定ボタン
+        set_btn = ctk.CTkButton(
+            input_frame,
+            text="設定",
+            command=self._set_custom_timer,
+            width=60,
+        )
+        set_btn.pack(side="left", padx=5)
         
         # コントロールボタン
         control_frame = ctk.CTkFrame(self.timer_window)
@@ -109,6 +174,24 @@ class TimerPlugin(PluginBase):
         """タイマーを設定"""
         self.remaining_time = seconds
         self._update_display()
+    
+    def _set_custom_timer(self):
+        """カスタムタイマーを設定"""
+        try:
+            hours = int(self.hours_entry.get() or 0)
+            minutes = int(self.minutes_entry.get() or 0)
+            seconds = int(self.seconds_entry.get() or 0)
+            
+            total_seconds = hours * 3600 + minutes * 60 + seconds
+            
+            if total_seconds > 0:
+                self._set_timer(total_seconds)
+            else:
+                # エラーメッセージ
+                self.time_label.configure(text="時間を入力")
+        except ValueError:
+            # 無効な入力
+            self.time_label.configure(text="無効な入力")
     
     def _start_timer(self):
         """タイマーを開始"""

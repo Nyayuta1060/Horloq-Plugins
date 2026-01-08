@@ -142,6 +142,9 @@ class StopwatchPlugin(PluginBase):
             font=("Arial", 12),
         )
         lap_label.pack(anchor="w", pady=2)
+        
+        # 最下部に自動スクロール
+        self.lap_frame._parent_canvas.yview_moveto(1.0)
     
     def _reset_stopwatch(self):
         """ストップウォッチをリセット"""
