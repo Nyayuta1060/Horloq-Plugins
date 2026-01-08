@@ -4,7 +4,6 @@ Bongo Cat タイピングアニメーションプラグイン
 
 from horloq.plugins.base import PluginBase
 import customtkinter as ctk
-import threading
 
 # pynputのインポートを試みる
 try:
@@ -71,6 +70,7 @@ class BongoCatPlugin(PluginBase):
         self.bongocat_window = ctk.CTkToplevel()
         self.bongocat_window.title("Bongo Cat")
         self.bongocat_window.geometry("600x400")
+        self.bongocat_window.attributes("-topmost", True)  # 最前面固定
         
         # メインフレーム
         main_frame = ctk.CTkFrame(self.bongocat_window)
@@ -229,12 +229,14 @@ class BongoCatPlugin(PluginBase):
     def _on_key_press(self, key):
         """キー押下時のハンドラ"""
         if self.bongocat_window and self.bongocat_window.winfo_exists():
-            self.bongocat_window.after(0, self._show_typing)
+            # afterを使わず直接呼び出して、リセットだけafterでスケジュール
+            self._show_typing()
     
     def _on_mouse_click(self, x, y, button, pressed):
         """マウスクリック時のハンドラ"""
         if pressed and self.bongocat_window and self.bongocat_window.winfo_exists():
-            self.bongocat_window.after(0, self._show_clicking)
+            # afterを使わず直接呼び出して、リセットだけafterでスケジュール
+            self._show_clicking()
     
     def _show_typing(self):
         """タイピングアニメーションを表示"""
@@ -247,8 +249,9 @@ class BongoCatPlugin(PluginBase):
         
         # 一定時間後に待機状態に戻す
         sensitivity = self.sensitivity_slider.get() / 1000.0
-        self.reset_timer = threading.Timer(sensitivity, self._reset_to_idle)
-        self.reset_timer.start()
+        # メインスレッドでafterを使用
+        if self.bongocat_window and self.bongocat_window.winfo_exists():
+            self.bongocat_window.after(int(sensitivity * 1000), self._reset_to_idle)
     
     def _show_clicking(self):
         """クリックアニメーションを表示"""
@@ -261,13 +264,14 @@ class BongoCatPlugin(PluginBase):
         
         # 一定時間後に待機状態に戻す
         sensitivity = self.sensitivity_slider.get() / 1000.0
-        self.reset_timer = threading.Timer(sensitivity, self._reset_to_idle)
-        self.reset_timer.start()
+        # メインスレッドでafterを使用
+        if self.bongocat_window and self.bongocat_window.winfo_exists():
+            self.bongocat_window.after(int(sensitivity * 1000), self._reset_to_idle)
     
     def _reset_to_idle(self):
         """待機状態に戻す"""
         if self.bongocat_window and self.bongocat_window.winfo_exists():
-            self.bongocat_window.after(0, self._draw_cat_idle)
+            self._draw_cat_idle()
             self.is_typing = False
             self.is_clicking = False
     

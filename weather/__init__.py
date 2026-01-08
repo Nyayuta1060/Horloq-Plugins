@@ -49,8 +49,8 @@ class WeatherPlugin(PluginBase):
         self.weather_window = None
         # OpenWeatherMap API（無料版）
         # 注: 実際に使用する場合は、https://openweathermap.org/ でAPIキーを取得してください
-        self.api_key = "YOUR_API_KEY_HERE"
-        self.city = "Tokyo"
+        self.api_key = self.get_config("api_key", "")
+        self.city = self.get_config("city", "Tokyo")
         self.weather_data = None
         
     def initialize(self) -> bool:
@@ -252,6 +252,15 @@ class WeatherPlugin(PluginBase):
         self.api_key_entry.insert(0, self.api_key)
         self.api_key_entry.pack(side="left", padx=5)
         
+        # 保存ボタン
+        save_btn = ctk.CTkButton(
+            api_frame,
+            text="保存",
+            command=self._save_settings,
+            width=60,
+        )
+        save_btn.pack(side="left", padx=5)
+        
         # 注意書き
         note_label = ctk.CTkLabel(
             main_frame,
@@ -382,6 +391,22 @@ class WeatherPlugin(PluginBase):
         # 更新時刻
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.update_time_label.configure(text=f"最終更新: {now}")
+    
+    def _save_settings(self):
+        """設定を保存"""
+        self.api_key = self.api_key_entry.get()
+        self.city = self.city_entry.get()
+        
+        # 設定を永続化
+        self.set_config("api_key", self.api_key)
+        self.set_config("city", self.city)
+        
+        # 保存完了メッセージ（簡易版）
+        if self.weather_window and self.weather_window.winfo_exists():
+            # 一時的にメッセージを表示
+            original_text = self.description_label.cget("text")
+            self.description_label.configure(text="設定を保存しました！")
+            self.weather_window.after(2000, lambda: self.description_label.configure(text=original_text))
     
     def cleanup(self):
         """クリーンアップ"""
