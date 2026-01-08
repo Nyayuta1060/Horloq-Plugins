@@ -5,15 +5,39 @@ plugins:
     description: シンプルなHello Worldプラグイン
     version: 1.0.0
     author: Nyayuta1060
-  
+
   - name: timer
     path: timer
     description: カウントダウンタイマー（プリセット機能付き）
     version: 1.0.0
     author: Nyayuta1060
-  
+
   - name: stopwatch
     path: stopwatch
     description: 精密時間計測（ラップタイム機能付き）
+    version: 1.0.0
+    author: Nyayuta1060
+
+  - name: bongocat
+    path: bongocat
+    description: キー入力に反応する Bongo Cat アニメーション
+    version: 1.0.0
+    author: Nyayuta1060
+
+  - name: pomodoro
+    path: pomodoro
+    description: ポモドーロテクニックで生産性向上
+    version: 1.0.0
+    author: Nyayuta1060
+
+  - name: weather
+    path: weather
+    description: リアルタイム天気予報表示
+    version: 1.0.0
+    author: Nyayuta1060
+
+  - name: pet
+    path: pet
+    description: 時計画面に居座る可愛いデスクトップペット
     version: 1.0.0
     author: Nyayuta1060
