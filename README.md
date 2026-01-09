@@ -176,13 +176,43 @@ OpenWeatherMap APIを使用したリアルタイム天気予報表示プラグ�
 
 このリポジトリはモノレポ形式でプラグインを管理しています。
 
+### プラグインカタログの自動生成
+
+`plugins.yaml`（プラグインカタログ）は各プラグインの`plugin.yaml`から**自動生成**されます。
+
+#### 仕組み
+
+- 各プラグインディレクトリの`plugin.yaml`がメタデータの唯一の情報源（Single Source of Truth）
+- `generate_catalog.py`スクリプトが全プラグインの`plugin.yaml`をスキャンして`plugins.yaml`を生成
+- GitHub Actionsで`plugin.yaml`の変更を検知して自動実行
+
+#### 手動生成
+
+ローカルで`plugins.yaml`を生成したい場合：
+
+```bash
+python generate_catalog.py
+```
+
+#### プラグイン情報の更新手順
+
+1. プラグインディレクトリの`plugin.yaml`を編集
+2. コミット＆プッシュ
+3. GitHub Actionsが自動的に`plugins.yaml`を更新
+
+**⚠️ 重要**: `plugins.yaml`は自動生成ファイルなので、直接編集しないでください。
+
 ### 構造
 
 ```
 Horloq-Plugins/
-├── plugins.yaml       # プラグインカタログ
+├── plugins.yaml           # 自動生成されるプラグインカタログ
+├── generate_catalog.py    # カタログ生成スクリプト
+├── .github/
+│   └── workflows/
+│       └── generate-catalog.yml  # 自動生成ワークフロー
 ├── hello/
-│   ├── plugin.yaml
+│   ├── plugin.yaml        # メタデータ（編集はこちら）
 │   └── __init__.py
 ├── timer/
 │   ├── plugin.yaml
@@ -196,7 +226,8 @@ Horloq-Plugins/
 
 1. 新しいディレクトリを作成
 2. `plugin.yaml`と`__init__.py`を作成
-3. `plugins.yaml`にエントリを追加
+3. （オプション）外部ライブラリが必要な場合は`requirements.txt`を作成
+4. `generate_catalog.py`を実行、または変更をプッシュ（自動生成されます）
 
 詳細は [Horloq プラグイン開発ガイド](https://github.com/Nyayuta1060/Horloq/blob/main/docs/PLUGIN_DEVELOPMENT.md) を参照してください。
 
