@@ -12,13 +12,7 @@ class PomodoroPlugin(PluginBase):
     """ポモドーロタイマープラグイン"""
     
     def __init__(self, app_context):
-        super().__init__(
-            name="pomodoro",
-            version="1.0.0",
-            author="Nyayuta1060",
-            description="ポモドーロテクニックで生産性向上",
-            app_context=app_context,
-        )
+        super().__init__(app_context)
         self.pomodoro_window = None
         self.is_running = False
         self.is_break = False

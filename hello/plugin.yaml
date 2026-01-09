@@ -1,5 +1,5 @@
 name: hello
-version: 1.0.0
+version: 1.0.1
 author: Nyayuta1060
 description: シンプルなHello Worldプラグイン
-min_horloq_version: 0.1.0
+min_horloq_version: 0.2.0

@@ -39,13 +39,7 @@ class WeatherPlugin(PluginBase):
     }
     
     def __init__(self, app_context):
-        super().__init__(
-            name="weather",
-            version="1.0.0",
-            author="Nyayuta1060",
-            description="リアルタイム天気予報表示",
-            app_context=app_context,
-        )
+        super().__init__(app_context)
         self.weather_window = None
         # OpenWeatherMap API（無料版）
         # 注: 実際に使用する場合は、https://openweathermap.org/ でAPIキーを取得してください

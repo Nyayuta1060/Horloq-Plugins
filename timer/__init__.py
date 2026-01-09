@@ -11,13 +11,7 @@ class TimerPlugin(PluginBase):
     """カウントダウンタイマープラグイン"""
     
     def __init__(self, app_context):
-        super().__init__(
-            name="timer",
-            version="1.0.0",
-            author="Nyayuta1060",
-            description="カウントダウンタイマー",
-            app_context=app_context,
-        )
+        super().__init__(app_context)
         self.timer_window = None
         self.remaining_time = 0
         self.is_running = False

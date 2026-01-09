@@ -1,5 +1,5 @@
 name: stopwatch
-version: 1.0.1
+version: 1.0.2
 author: Nyayuta1060
 description: 精密時間計測（ラップタイム機能付き）
-min_horloq_version: 0.1.0
+min_horloq_version: 0.2.0

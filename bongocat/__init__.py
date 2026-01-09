@@ -19,13 +19,7 @@ class BongoCatPlugin(PluginBase):
     """Bongo Cat タイピングアニメーションプラグイン"""
     
     def __init__(self, app_context):
-        super().__init__(
-            name="bongocat",
-            version="1.0.0",
-            author="Nyayuta1060",
-            description="キー入力に反応する Bongo Cat アニメーション",
-            app_context=app_context,
-        )
+        super().__init__(app_context)
         self.bongocat_window = None
         self.keyboard_listener = None
         self.mouse_listener = None

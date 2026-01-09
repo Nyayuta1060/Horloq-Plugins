@@ -10,13 +10,7 @@ class HelloPlugin(PluginBase):
     """シンプルなHello Worldプラグイン"""
     
     def __init__(self, app_context):
-        super().__init__(
-            name="hello",
-            version="1.0.0",
-            author="Nyayuta1060",
-            description="シンプルなHello Worldプラグイン",
-            app_context=app_context,
-        )
+        super().__init__(app_context)
     
     def initialize(self) -> bool:
         """初期化"""

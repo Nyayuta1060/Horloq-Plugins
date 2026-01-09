@@ -11,13 +11,7 @@ class StopwatchPlugin(PluginBase):
     """ストップウォッチプラグイン"""
     
     def __init__(self, app_context):
-        super().__init__(
-            name="stopwatch",
-            version="1.0.0",
-            author="Nyayuta1060",
-            description="ストップウォッチ",
-            app_context=app_context,
-        )
+        super().__init__(app_context)
         self.stopwatch_window = None
         self.start_time = 0
         self.elapsed_time = 0

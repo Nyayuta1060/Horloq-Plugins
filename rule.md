@@ -39,13 +39,9 @@ import customtkinter as ctk
 
 class YourPlugin(PluginBase):
     def __init__(self, app_context):
-        super().__init__(
-            name="plugin-name",
-            version="1.0.0",
-            author="Your Name",
-            description="説明文",
-            app_context=app_context,
-        )
+        # plugin.yamlから自動的にメタデータを読み込みます
+        # name, version, author, description の指定は不要です
+        super().__init__(app_context)
     
     def initialize(self) -> bool:
         """
@@ -72,10 +68,15 @@ class YourPlugin(PluginBase):
         # ウィジェットの実装
         return frame
 
-def create_plugin(app_context):
-    """プラグインインスタンスを作成（必須）"""
-    return YourPlugin(app_context)
+# プラグインクラスをエクスポート（必須）
+Plugin = YourPlugin
 ```
+
+**⚠️ 重要な変更点**:
+- `__init__`では`super().__init__(app_context)`のみ呼び出す
+- `name`、`version`、`author`、`description`は**plugin.yamlから自動読み込み**
+- Pythonコード内でのメタデータのハードコーディングは不要
+- `plugin.yaml`が唯一の情報源（Single Source of Truth）
 
 ## 🎨 UI/UXガイドライン
 
@@ -307,6 +308,7 @@ if __debug__:
 - [ ] ウィンドウの重複チェックがある
 - [ ] 設定が適切に保存/読み込みされる
 - [ ] コードにハードコードされた秘密情報がない
+
 
 ## 📚 参考実装
 

@@ -1,5 +1,5 @@
 name: weather
-version: 1.0.0
+version: 1.0.1
 author: Nyayuta1060
 description: リアルタイム天気予報表示
-min_horloq_version: 0.1.1
+min_horloq_version: 0.2.0
