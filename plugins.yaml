@@ -21,7 +21,7 @@ plugins:
   - name: bongocat
     path: bongocat
     description: キー入力に反応する Bongo Cat アニメーション
-    version: 1.0.0
+    version: 1.0.1
     author: Nyayuta1060
 
   - name: pomodoro

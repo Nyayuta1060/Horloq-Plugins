@@ -32,6 +32,8 @@ class BongoCatPlugin(PluginBase):
         self.is_typing = False
         self.is_clicking = False
         self.reset_timer = None
+        self.key_count = 0
+        self.click_count = 0
         
     def initialize(self) -> bool:
         """初期化"""
@@ -105,6 +107,46 @@ class BongoCatPlugin(PluginBase):
         )
         self.status_label.pack(pady=10)
         
+        # カウンター表示
+        counter_frame = ctk.CTkFrame(main_frame)
+        counter_frame.pack(pady=10, fill="x", padx=20)
+        
+        # キー入力カウンター
+        key_counter_frame = ctk.CTkFrame(counter_frame)
+        key_counter_frame.pack(side="left", expand=True, fill="both", padx=5)
+        
+        ctk.CTkLabel(
+            key_counter_frame,
+            text="⌨️ キー入力",
+            font=("Arial", 12),
+        ).pack(pady=5)
+        
+        self.key_count_label = ctk.CTkLabel(
+            key_counter_frame,
+            text="0",
+            font=("Arial", 32, "bold"),
+            text_color="#4ECDC4",
+        )
+        self.key_count_label.pack(pady=5)
+        
+        # マウスクリックカウンター
+        click_counter_frame = ctk.CTkFrame(counter_frame)
+        click_counter_frame.pack(side="left", expand=True, fill="both", padx=5)
+        
+        ctk.CTkLabel(
+            click_counter_frame,
+            text="🖱️ クリック",
+            font=("Arial", 12),
+        ).pack(pady=5)
+        
+        self.click_count_label = ctk.CTkLabel(
+            click_counter_frame,
+            text="0",
+            font=("Arial", 32, "bold"),
+            text_color="#FF6B6B",
+        )
+        self.click_count_label.pack(pady=5)
+        
         # コントロールボタン
         control_frame = ctk.CTkFrame(main_frame)
         control_frame.pack(pady=10)
@@ -116,6 +158,15 @@ class BongoCatPlugin(PluginBase):
             width=120,
         )
         self.toggle_btn.pack(side="left", padx=5)
+        
+        # カウンターリセットボタン
+        reset_counter_btn = ctk.CTkButton(
+            control_frame,
+            text="カウンターリセット",
+            command=self._reset_counters,
+            width=140,
+        )
+        reset_counter_btn.pack(side="left", padx=5)
         
         # 設定
         settings_frame = ctk.CTkFrame(main_frame)
@@ -140,13 +191,37 @@ class BongoCatPlugin(PluginBase):
         # ウィンドウクローズ時のハンドラ
         self.bongocat_window.protocol("WM_DELETE_WINDOW", self._on_window_close)
         
-        # 自動的に監視を開始
+        # ウィンドウを最前面に表示
+        self.bongocat_window.attributes("-topmost", True)
+        
+        # 監視を自動的に開始
         self._start_monitoring()
         self.toggle_btn.configure(text="監視停止")
         self.status_label.configure(text="監視中...")
     
-    def _draw_cat_idle(self):
-        """待機中の猫を描画"""
+    def _on_key_press(self, key):
+        """キー押下時のハンドラ"""
+        # カウントを増やす
+        self.key_count += 1
+        self.key_count_label.configure(text=str(self.key_count))
+        
+        if self.bongocat_window and self.bongocat_window.winfo_exists():
+            # afterを使わず直接呼び出して、リセットだけafterでスケジュール
+            self._show_typing()
+    
+    def _on_mouse_click(self, x, y, button, pressed):
+        """マウスクリック時のハンドラ"""
+        # カウントを増やす
+        if pressed:
+            self.click_count += 1
+            self.click_count_label.configure(text=str(self.click_count))
+        
+        if pressed and self.bongocat_window and self.bongocat_window.winfo_exists():
+            # afterを使わず直接呼び出して、リセットだけafterでスケジュール
+            self._show_clicking()
+    
+    def _show_typing(self):
+        """タイピングアニメーションを表示"""
         self.cat_canvas.delete("all")
         
         # 猫の体（簡略化したASCIIアート風）
@@ -237,12 +312,6 @@ class BongoCatPlugin(PluginBase):
             # afterを使わず直接呼び出して、リセットだけafterでスケジュール
             self._show_typing()
     
-    def _on_mouse_click(self, x, y, button, pressed):
-        """マウスクリック時のハンドラ"""
-        if pressed and self.bongocat_window and self.bongocat_window.winfo_exists():
-            # afterを使わず直接呼び出して、リセットだけafterでスケジュール
-            self._show_clicking()
-    
     def _show_typing(self):
         """タイピングアニメーションを表示"""
         self._draw_cat_typing()
@@ -279,6 +348,13 @@ class BongoCatPlugin(PluginBase):
             self._draw_cat_idle()
             self.is_typing = False
             self.is_clicking = False
+    
+    def _reset_counters(self):
+        """カウンターをリセット"""
+        self.key_count = 0
+        self.click_count = 0
+        self.key_count_label.configure(text="0")
+        self.click_count_label.configure(text="0")
     
     def _on_window_close(self):
         """ウィンドウクローズ時の処理"""
