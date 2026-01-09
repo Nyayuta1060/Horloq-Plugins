@@ -220,21 +220,51 @@ class BongoCatPlugin(PluginBase):
             # afterを使わず直接呼び出して、リセットだけafterでスケジュール
             self._show_clicking()
     
-    def _show_typing(self):
-        """タイピングアニメーションを表示"""
+    def _draw_cat_idle(self):
+        """待機中の猫を描画"""
         self.cat_canvas.delete("all")
         
         # 猫の体（簡略化したASCIIアート風）
         self.cat_canvas.create_text(
             200, 100,
             text="　　　∧＿∧\n"
-                 "　　（´・ω・）\n"
+                 "　　（　´ω｀）\n"
                  "　　/　　　 ヽ\n"
                  "　（|　　　　|）\n"
                  "　　し ーーJ",
             font=("Courier", 16),
             fill="#FFFFFF",
         )
+    
+    def _show_typing(self):
+        """タイピングアニメーションを表示"""
+        self._draw_cat_typing()
+        self.is_typing = True
+        
+        # リセットタイマーをキャンセル
+        if self.reset_timer:
+            self.reset_timer.cancel()
+        
+        # 一定時間後に待機状態に戻す
+        sensitivity = self.sensitivity_slider.get() / 1000.0
+        # メインスレッドでafterを使用
+        if self.bongocat_window and self.bongocat_window.winfo_exists():
+            self.bongocat_window.after(int(sensitivity * 1000), self._reset_to_idle)
+    
+    def _show_clicking(self):
+        """クリックアニメーションを表示"""
+        self._draw_cat_clicking()
+        self.is_clicking = True
+        
+        # リセットタイマーをキャンセル
+        if self.reset_timer:
+            self.reset_timer.cancel()
+        
+        # 一定時間後に待機状態に戻す
+        sensitivity = self.sensitivity_slider.get() / 1000.0
+        # メインスレッドでafterを使用
+        if self.bongocat_window and self.bongocat_window.winfo_exists():
+            self.bongocat_window.after(int(sensitivity * 1000), self._reset_to_idle)
     
     def _draw_cat_typing(self):
         """タイピング中の猫を描画"""
@@ -305,12 +335,6 @@ class BongoCatPlugin(PluginBase):
         if self.reset_timer:
             self.reset_timer.cancel()
             self.reset_timer = None
-    
-    def _on_key_press(self, key):
-        """キー押下時のハンドラ"""
-        if self.bongocat_window and self.bongocat_window.winfo_exists():
-            # afterを使わず直接呼び出して、リセットだけafterでスケジュール
-            self._show_typing()
     
     def _show_typing(self):
         """タイピングアニメーションを表示"""
