@@ -5,6 +5,64 @@
 - プラグインそれぞれにブランチを立てる
 - ブランチ名: `plugin/<plugin-name>` (例: `plugin/weather`, `plugin/bongocat`)
 - 完成後、mainブランチにマージ(ただしPullRequestを出すこと)
+- **plugins.yaml は自動生成されるため、手動編集禁止**
+
+## 📦 プラグインカタログの自動生成
+
+### 🚨 重要: plugins.yaml は自動生成ファイル
+
+`plugins.yaml` は**各プラグインの `plugin.yaml` から自動生成**されます。  
+直接編集すると、次回の自動生成で上書きされてしまいます。
+
+### 自動生成の仕組み
+
+1. **Single Source of Truth**: 各プラグインの `plugin.yaml` のみを編集
+2. **自動スキャン**: `generate_catalog.py` が全プラグインディレクトリをスキャン
+3. **GitHub Actions**: `plugin.yaml` の変更を検知して自動実行
+4. **自動コミット**: 生成された `plugins.yaml` を自動コミット & プッシュ
+
+### 手動生成の方法
+
+ローカルでテストする場合：
+
+```bash
+python generate_catalog.py
+```
+
+### GitHub Actions ワークフロー
+
+`.github/workflows/generate-catalog.yml` で自動化：
+
+```yaml
+name: Generate Plugin Catalog
+on:
+  push:
+    paths:
+      - '**/plugin.yaml'
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 重要: 書き込み権限が必要
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install pyyaml
+      - run: python generate_catalog.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git add plugins.yaml
+          git commit -m "Auto-update plugins.yaml" || exit 0
+          git push
+```
+
+### プラグイン更新時の手順
+
+1. プラグインのコードを変更
+2. `plugin.yaml` のバージョンと説明を更新
+3. コミット & プッシュ
+4. GitHub Actions が自動的に `plugins.yaml` を更新
+5. ユーザーが次回 Horloq 起動時に更新通知を受け取る
 
 ## 📋 必須要件
 
