@@ -1,1 +1,3 @@
 pynput>=1.7.6
+# Windows環境で必要な依存関係
+pywin32>=306; sys_platform == 'win32'
