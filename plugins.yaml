@@ -7,7 +7,7 @@ plugins:
 - name: bongocat
   path: bongocat
   description: キー入力に反応する Bongo Cat アニメーション
-  version: 1.0.2
+  version: 1.0.3
   author: Nyayuta1060
 - name: hello
   path: hello
