@@ -286,12 +286,24 @@ class WeatherPlugin(PluginBase):
             )
             return
         
-        city = self.city_entry.get()
-        api_key = self.api_key_entry.get()
+        city = self.city_entry.get().strip()
+        api_key = self.api_key_entry.get().strip()
         
-        if not api_key or api_key == "YOUR_API_KEY_HERE":
+        # 設定を保存（取得前に保存することで次回以降も使える）
+        self.api_key = api_key
+        self.city = city
+        self.set_config("api_key", self.api_key)
+        self.set_config("city", self.city)
+        
+        if not api_key:
             self.description_label.configure(
                 text="APIキーを設定してください\n（またはデモデータを表示）"
+            )
+            return
+        
+        if not city:
+            self.description_label.configure(
+                text="都市名を入力してください"
             )
             return
         
@@ -306,15 +318,37 @@ class WeatherPlugin(PluginBase):
             }
             
             response = requests.get(url, params=params, timeout=10)
+            
+            # エラーレスポンスの詳細表示
+            if response.status_code == 401:
+                self.description_label.configure(
+                    text="エラー: APIキーが無効です\n"
+                         "OpenWeatherMapでAPIキーを確認してください\n"
+                         "https://openweathermap.org/api"
+                )
+                return
+            elif response.status_code == 404:
+                self.description_label.configure(
+                    text=f"エラー: 都市 '{city}' が見つかりません\n"
+                         "都市名を英語で入力してください"
+                )
+                return
+            
             response.raise_for_status()
             
             self.weather_data = response.json()
             self._update_weather_display()
             
         except requests.exceptions.RequestException as e:
-            self.description_label.configure(
-                text=f"エラー: {str(e)}\n（デモデータを表示することもできます）"
-            )
+            error_msg = str(e)
+            if "401" in error_msg:
+                self.description_label.configure(
+                    text="エラー: APIキーが無効です\n正しいAPIキーを入力してください"
+                )
+            else:
+                self.description_label.configure(
+                    text=f"エラー: {error_msg}\n（デモデータを表示することもできます）"
+                )
     
     def _show_demo_data(self):
         """デモデータを表示"""
